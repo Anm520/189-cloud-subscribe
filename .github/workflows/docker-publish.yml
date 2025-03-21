@@ -40,4 +40,4 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64 # 支持的架构
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/your-repo-name:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/189-cloud-subscribe:latest
