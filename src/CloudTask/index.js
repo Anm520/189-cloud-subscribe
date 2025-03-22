@@ -20,7 +20,7 @@ export function setCloudTaskFn(app) {
     });
     // 获取云盘账号列表
     app.post('/task/account/list', authenticateToken, async (req, res) => {
-        SQLAPI.GetAllData('cloud_users', ['account', 'cookies'], res,)
+        SQLAPI.GetAllData('cloud_users', ['account', 'cookies', 'update_time'], res,)
     });
     // 获取cookies
     app.post('/task/account/getCookies', authenticateToken, async (req, res) => {

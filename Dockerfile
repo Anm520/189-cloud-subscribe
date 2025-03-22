@@ -12,7 +12,7 @@ RUN apk add --update --no-cache python3 make g++ py3-setuptools
 WORKDIR /usr/src/app
 
 # 设置 npm 镜像源
-ENV NPM_CONFIG_REGISTRY=https://registry.npmmirror.com
+# ENV NPM_CONFIG_REGISTRY=https://registry.npmmirror.com
 
 # 安装应用依赖
 COPY package*.json ./
@@ -28,7 +28,7 @@ FROM node:20-alpine AS production-stage
 # 设置工作目录
 WORKDIR /usr/src/app
 # 更换为国内镜像源
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+# RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 # 安装Nginx
 RUN apk add --update --no-cache nginx
 
@@ -46,7 +46,7 @@ COPY ./cloud-vue-pc /usr/share/nginx/html/cloud-vue-pc
 COPY --from=build-stage /usr/src/app /usr/src/app
 
 # 暴露端口 80
-EXPOSE 80
+EXPOSE 80 81 
 
 # 设置默认的命令
 CMD ["sh", "-c", "nginx -g 'daemon off;' & node src/index.js"]

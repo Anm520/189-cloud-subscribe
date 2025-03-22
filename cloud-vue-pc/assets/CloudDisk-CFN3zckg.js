@@ -1,0 +1,1 @@
+import{a5 as t,r}from"./index-DVWsMLSs.js";const n=t("CloudDisk",()=>{const o=r({account:window.localStorage.getItem("account")||"",cookies:""});function e(s){o.value={...o.value,...s}}return{CloudDiskUserInfo:o,setCloudDiskUserInfo:e}});export{n as u};
