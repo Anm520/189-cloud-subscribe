@@ -5,4 +5,4 @@ CRYPTO_SECRET_KEY  config.js 记得改，加密密钥
  docker build -t 189-cloud-subscribe .
  docker save -o 189-cloud-subscribe.tar 189-cloud-subscribe
 3.运行容器命令
- docker run -d -p 8085:80 -p 8086:81 --name 189-cloud-subscribe-serve 189-cloud-subscribe
+ docker run -d -p 8085:80 --name 189-cloud-subscribe-serve 189-cloud-subscribe

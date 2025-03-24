@@ -37,6 +37,7 @@ RUN rm /etc/nginx/nginx.conf
 
 # 复制新的 nginx.conf 文件到容器中
 COPY ./nginx.conf /etc/nginx/nginx.conf
+RUN nginx -t
 
 # 复制新的 index.html 文件到镜像中
 COPY ./cloud-vue-h5 /usr/share/nginx/html/cloud-vue-h5
@@ -46,7 +47,7 @@ COPY ./cloud-vue-pc /usr/share/nginx/html/cloud-vue-pc
 COPY --from=build-stage /usr/src/app /usr/src/app
 
 # 暴露端口 80
-EXPOSE 80 81 
+EXPOSE 80 
 
 # 设置默认的命令
 CMD ["sh", "-c", "nginx -g 'daemon off;' & node src/index.js"]
