@@ -4,10 +4,17 @@ on:
   push:
     branches:
       - main # 监听 main 分支的推送事件
+    paths-ignore:
+      - 'README.md' # 忽略 README.md 的更改
+      - '.github/workflows/docker-publish.yml' # 忽略此工作流文件的更改
+      - 'readme.txt'
   pull_request:
     branches:
       - main
-
+    paths-ignore:
+      - 'README.md' # 忽略 README.md 的更改
+      - '.github/workflows/docker-publish.yml' # 忽略此工作流文件的更改
+      - 'readme.txt'
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
