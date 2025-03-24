@@ -28,4 +28,4 @@ coverage
 *.sw?
 *.zip
 *.tsbuildinfo
-
+*.db
