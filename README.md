@@ -16,10 +16,7 @@
 # 拉取镜像
 docker pull anm520/189-cloud-subscribe:latest
 # 运行容器
-docker run -d \
---name 189-cloud-subscribe \
--p 8080:80 \ # 映射端口：主机端口:容器端口
-anm520/189-cloud-subscribe:latest
+docker run -d --name 189-cloud-subscribe -p 8080:80  anm520/189-cloud-subscribe:latest
 ```
 ### 使用Docker Compose
 创建 `docker-compose.yml` 文件：
