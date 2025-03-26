@@ -52,20 +52,38 @@ const pushWxPushMessage = (content, summary, spt) => {
         console.error('Error occurred:', error)
     }
 }
+const pushQXPushMessage = (text, key) => {
+    const data = {
+        msgtype: "text",
+        text: {
+            content: text
+        }
+    }
+    try {
+        return axios.post(`https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${key}`, data, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+    } catch (error) {
+        console.error('Error occurred:', error)
+    }
+
+}
 // { task_name = null, added = null, account = null, } 
 export const pushMessage = async (type, params) => {
     db.all(`SELECT * FROM config`, (err, rows) => {
         if (rows && rows[0]) {
             // 钉钉消息推送
-            let ding_talk_token = rows[0].ding_talk_token
-            let tg_bot_token = rows[0].tg_bot_token
-            let tg_chat_id = rows[0].tg_chat_id
-            let wx_push_spt = rows[0].wx_push_spt
-            if (!ding_talk_token && !tg_bot_token && !wx_push_spt) return //没有token不发消息通知
+
+            const { ding_talk_token = '', tg_bot_token = '', tg_chat_id = '', wx_push_spt = '', qx_push_token = '' } = rows[0]
+            if (!ding_talk_token && !tg_bot_token && !wx_push_spt && !qx_push_token) return //没有token不发消息通知
 
             if (type == 'task') {
                 let { task_name = '', added = [], account, } = params
-                let text = `###### 云盘更新通知 \n #### [${task_name} 更新${added.length}集](h)  \n`
+                let title = `云盘更新通知 \n  ${task_name} 更新${added.length}集  \n`
+                let mdTitle = `###### 云盘更新通知 \n #### [${task_name} 更新${added.length}集](h)  \n`
+                let text = ''
                 added.slice(0, 10).forEach((file) => {
                     text += `- ${file.name} \n`
                 })
@@ -76,12 +94,14 @@ export const pushMessage = async (type, params) => {
                     msgtype: 'markdown',
                     markdown: {
                         title: '云盘通知',
-                        text,
+                        text: mdTitle + text,
                     },
                 }
-                tg_chat_id && tg_bot_token && pushTelegramMessage({ text, tg_chat_id, tg_bot_token })
+                tg_chat_id && tg_bot_token && pushTelegramMessage({ text: title + text, tg_chat_id, tg_bot_token })
                 ding_talk_token && pushDingTalkMessage(msgCard, ding_talk_token)
                 wx_push_spt && pushWxPushMessage(text, task_name, wx_push_spt)
+                qx_push_token && pushQXPushMessage(title + text, qx_push_token)
+
             }
 
             if (type == 'cookieErr') {

@@ -124,6 +124,7 @@ const createConfigTableSql = `CREATE TABLE IF NOT EXISTS config (
     update_time TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%S', 'now')),
     tg_chat_id TEXT DEFAULT NULL,
     wx_push_spt TEXT DEFAULT NULL,
+    qx_push_token TEXT DEFAULT NULL,
     chanel_url TEXT DEFAULT NULL
   );`
 db.run(createConfigTableSql, (err) => {
