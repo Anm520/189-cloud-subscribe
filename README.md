@@ -45,9 +45,15 @@ docker-compose up -d
 
 2. 首次使用需在Web界面完成：
    - 账户绑定验证
-   - 任务计划配置
-
-3. 常用操作命令：
+   - 定时配置
+   - 订阅任务
+3. 定时配置-消息推送 推荐使用钉钉推送、WxPusher消息推送平台
+  - 钉钉机器人推送token https://oapi.dingtalk.com/robot/send?access_token=123456 添加access_token=后边的内容；推送关键词添加两个：订阅 通知
+  -  [WxPusher消息推送平台](https://wxpusher.zjiecode.com/docs/#/?id=获取spt) 方式二：极简推送  扫码获取wx_push_spt     
+   <img src="https://wxpusher.zjiecode.com/api/qrcode/RwjGLMOPTYp35zSYQr0HxbCPrV9eU0wKVBXU1D5VVtya0cQXEJWPjqBdW3gKLifS.jpg" width="200" />
+4. 频道消息 需要 tg消息获取程序配合
+  - [tg消息获取程序](https://github.com/Anm520/cloud-chanel-py)
+5. 常用操作命令：
 ```bash
 # 查看实时日志
 docker logs -f 189-cloud-subscribe
