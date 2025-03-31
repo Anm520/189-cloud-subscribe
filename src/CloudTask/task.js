@@ -6,9 +6,28 @@ import { handleError } from '../unitl/index.js'
 import { findDifference } from '../unitl/index.js'
 import SQLAPI from './sqlLite.js'
 import { pushMessage } from './pushMessage.js'
-import { errorCode } from '../unitl/index.js'
+import { errorCode, isWithinTaskTimeRange, isWithinTaskWeekRange } from '../unitl/index.js'
 import dayjs from 'dayjs'
 let timer = null
+/** 判断当前时间是否在任务时间范围内 */
+const isCurrentTimeInTaskRange = () => {
+    return new Promise((resolve, reject) => {
+        db.all(`SELECT * FROM config`, (err, rows) => {
+            if (err) {
+                console.log('isCurrentTimeInTaskRange >>>', err)
+                reject(false)
+            } else {
+                const { task_start_time = '', task_end_time = '' } = rows[0]
+                if (task_start_time && task_end_time) {
+                    const res = isWithinTaskTimeRange(task_start_time, task_end_time)
+                    res ? resolve(true) : resolve(false)
+                }
+                reject(false)
+            }
+        })
+    })
+}
+
 /**
  * 单独 立即执行一个任务，执行此函数必须已验证cookie正常未失效
  * @param {*} taskRow 任务信息
@@ -131,8 +150,7 @@ export function executeTaskByID(id, result) {
         })
 }
 // 批量执行
-export function batchExecuteTaskByAcc(account, result) {
-    console.log(' batchExecuteTaskByAcc>>>', account)
+export async function batchExecuteTaskByAcc(account, result) {
     let sql = 'SELECT * FROM task WHERE status = 1'
     let params = []
     if (account) {
@@ -143,13 +161,22 @@ export function batchExecuteTaskByAcc(account, result) {
         if (err) {
             handleError(err, result, '任务执行失败：batchExecuteTask ==> db.all :')
         } else {
-            //   console.log(' batchExecuteTaskByAcc>>>', rows)
+            // console.log(' batchExecuteTaskByAcc>>>', rows)
             rows.forEach(async (row) => {
-                executeTaskFn(row)
-                // 添加延时，防止并发错误
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                if (result) { // 手动执行
+                    executeTaskFn(row)
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    return
+                }
+                if (isWithinTaskWeekRange(row.task_week)) { //自动执行任务
+                    executeTaskFn(row)
+                    // 添加延时，防止并发错误
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    return
+                }
+
             })
-            result && result.status(200).json({ res_code: 0, res_message: '已执行' })
+            result && result.status(200).json({ res_code: 0, res_message: '任务已执行' })
         }
     })
 }
@@ -164,7 +191,9 @@ async function checkCookieFn(accountRow, errMsgList) {
     }
 }
 // 批量校验cookie函数 并执行任务
-function batchCheckCookieFn() {
+async function batchCheckCookieFn() {
+    const isTaskExecutionTime = await isCurrentTimeInTaskRange()
+    if (!isTaskExecutionTime) return // 未在执行时间范围内就停止
     SQLAPI.GetAllData('cloud_users', ['account', 'cookies']).then((rows) => {
         let errMsgList = []
         let requestList = rows.map((row) => checkCookieFn(row, errMsgList))
@@ -185,17 +214,16 @@ function createTimedTask(result) {
             const row = rows[0]
             if (row && row.is_execute == 1) {
                 timer && clearInterval(timer)
-                console.log('定时配置row >>>>>:', row)
                 timer = setInterval(() => {
-                    console.log('cloud-node-5定时任务执行开始...', dayjs().format('YYYY-MM-DD HH:mm:ss'))
+                    console.log('定时任务执行开始...', dayjs().format('YYYY-MM-DD HH:mm:ss'))
                     batchCheckCookieFn()
                 }, 1000 * 60 * row.time_interval)
-                console.log('cloud-node-5定时任务执行开始......', dayjs().format('YYYY-MM-DD HH:mm:ss'))
+                console.log('定时任务执行开始......', dayjs().format('YYYY-MM-DD HH:mm:ss'))
                 result && result.status(200).json({ res_code: 0, res_message: '定时任务已执行' })
             }
             if (row && row.is_execute == 0) {
                 if (timer) {
-                    console.log('cloud-node-5定时任务已关闭 >>>>>:')
+                    console.log('定时任务已关闭 >>>>>:')
                     clearInterval(timer)
                 }
                 result && result.status(200).json({ res_code: 0, res_message: '定时任务已关闭' })

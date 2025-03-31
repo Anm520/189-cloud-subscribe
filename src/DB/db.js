@@ -75,6 +75,7 @@ const createTaskTableSql = `
 CREATE TABLE IF NOT EXISTS task (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   task_name TEXT DEFAULT NULL,
+  task_week TEXT DEFAULT NULL,
   share_id TEXT DEFAULT NULL,
   share_file_id TEXT DEFAULT NULL,
   share_code TEXT DEFAULT NULL,
@@ -116,6 +117,8 @@ db.run(createTaskTableSql, (err) => {
 // 创建系统config 表（如果不存在）
 const createConfigTableSql = `CREATE TABLE IF NOT EXISTS config (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    task_start_time TEXT DEFAULT '00:00:00',
+    task_end_time TEXT DEFAULT '23:59:59',
     time_interval INTEGER DEFAULT 30,
     is_execute INTEGER DEFAULT 0,
     timer TEXT DEFAULT NULL,

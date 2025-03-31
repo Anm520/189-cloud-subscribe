@@ -1,6 +1,7 @@
 
 import crypto from 'crypto';
 import { CRYPTO_SECRET_KEY } from '../config.js'
+import dayjs from 'dayjs'
 // 定义密钥和初始化向量 (IV) - 在实际应用中，请确保这些值的安全性
 const IV_LENGTH = 16; // AES 块大小固定为 16 字节
 /**
@@ -189,3 +190,37 @@ export const errorCode = {
     ErrorLogin: '登录账号失败，paras只有1分钟有效，且只能请求一次',
     InvalidAccessToken: 'AccessToken无效',
 }
+
+export function isWithinTaskTimeRange(task_start_time, task_end_time) {
+    if (task_start_time && task_end_time) {
+        const now = dayjs(); // 当前时间
+        const today = now.format('YYYY-MM-DD'); // 今天的日期
+        // 将任务开始时间和结束时间拼接为完整的日期时间格式
+        const startTime = dayjs(`${today} ${task_start_time}`);
+        const endTime = dayjs(`${today} ${task_end_time}`);
+        // 判断当前时间是否在任务时间范围内
+        if (task_start_time > task_end_time) {
+            // 跨天的情况
+            return now.isAfter(startTime) || now.isBefore(endTime);
+        } else {
+            // 正常情况
+            return now.isAfter(startTime) && now.isBefore(endTime);
+        }
+    }
+    return false; // 如果任务时间未定义，返回 false
+}
+/**  获取 ISO 标准的星期几（1-7）*/
+export function getIsoWeekday() {
+    const day = dayjs().day(); // 获取当前星期几（0-6）
+    return day === 0 ? 7 : day; // 星期日映射为 7
+}
+/**  判断当前时间是否在任务时间范围内 */
+export function isWithinTaskWeekRange(week) {
+    const currentDay = getIsoWeekday();
+    const days = JSON.parse(week);
+    if (days.includes(currentDay) || days.includes(8)) {
+        return true;
+    }
+    return false
+}
+
