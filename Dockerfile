@@ -31,7 +31,11 @@ WORKDIR /usr/src/app
 # RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 # 安装Nginx
 RUN apk add --update --no-cache nginx
-
+# 安装 tzdata 包并设置时区
+RUN apk add --no-cache tzdata
+# 设置环境变量 TZ 并链接时区文件
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # 移除默认的 Nginx 配置文件
 RUN rm /etc/nginx/nginx.conf
 
