@@ -217,7 +217,13 @@ export function getIsoWeekday() {
 /**  判断当前时间是否在任务时间范围内 */
 export function isWithinTaskWeekRange(week) {
     const currentDay = getIsoWeekday();
-    const days = JSON.parse(week);
+    let days = [];
+    try {
+        days = JSON.parse(week);
+    } catch (e) {
+        console.log(e)
+    }
+
     if (days.includes(currentDay) || days.includes(8)) {
         return true;
     }
