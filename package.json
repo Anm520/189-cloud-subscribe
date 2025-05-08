@@ -1,0 +1,35 @@
+{
+  "name": "cloud-node-new",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ./src/index.js",
+    "build": "node ./src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "bcryptjs": "^3.0.2",
+    "body-parser": "^1.20.3",
+    "dayjs": "^1.11.13",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "got": "^14.4.6",
+    "jsonwebtoken": "^9.0.2",
+    "node-jsencrypt": "^1.0.0",
+    "node-rsa": "^1.1.1",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "qs": "^6.14.0",
+    "sqlite3": "^5.1.7",
+    "tough-cookie": "^5.1.1"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.38.3",
+    "nodemon": "^3.1.9"
+  }
+}
