@@ -9,7 +9,7 @@ RUN apk add --update --no-cache ca-certificates
 RUN apk add --update --no-cache python3 make g++ py3-setuptools
 
 # 设置工作目录
-WORKDIR /code
+WORKDIR /usr/src/app
 
 # 设置 npm 镜像源
 # ENV NPM_CONFIG_REGISTRY=https://registry.npmmirror.com
@@ -26,7 +26,7 @@ RUN npm install
 FROM node:20-alpine AS production-stage
 
 # 设置工作目录
-WORKDIR /code
+WORKDIR /usr/src/app
 # 更换为国内镜像源
 # RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 # 安装Nginx
@@ -48,11 +48,10 @@ COPY ./189-vue-h5/cloud-vue-h5 /usr/share/nginx/html/cloud-vue-h5
 COPY ./189-vue-pc/cloud-vue-pc /usr/share/nginx/html/cloud-vue-pc
 
 # 复制从构建阶段生成的Node.js应用
-COPY --from=build-stage /code /code
-RUN chmod +x /code/src/entrypoint.sh
+COPY --from=build-stage /usr/src/app /usr/src/app
+
 # 暴露端口 80
 EXPOSE 80 
 
-
 # 设置默认的命令
-CMD ["sh","/usr/src/app/src/entrypoint.sh"]
+CMD ["sh", "-c", "nginx -g 'daemon off;' & node src/index.js"]
