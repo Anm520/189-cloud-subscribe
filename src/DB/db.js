@@ -7,7 +7,7 @@ import bcrypt from "bcryptjs";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // 设置数据库文件的路径为当前目录下的 myDatabase.db
-const dbPath = path.resolve(__dirname, "myDatabase.db");
+const dbPath = path.resolve(__dirname, "../data/my.db");
 // 创建一个数据库连接
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
