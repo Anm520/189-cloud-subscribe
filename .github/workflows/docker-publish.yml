@@ -45,14 +45,14 @@ jobs:
           node-version: '18'  # 根据你的项目需求调整版本
       # ✅ Step 4: 构建第一个 Vue 子模块（假设路径是 cloud-vue-pc）
       - name: Build Vue PC project
-        working-directory: ./189-vue-pc
+        working-directory: ./cloud-vue-pc
         run: |
           npm install
           npm run build
 
       # ✅ Step 5: 构建第二个 Vue 子模块（假设路径是 cloud-vue-mobile）
       - name: Build Vue Mobile project
-        working-directory: ./189-vue-h5
+        working-directory: ./cloud-vue-h5
         run: |
           npm install
           npm run build
