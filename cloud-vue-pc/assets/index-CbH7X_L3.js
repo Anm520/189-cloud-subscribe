@@ -1,1 +1,0 @@
-function s(t){if(t===0)return"0 Bytes";const o=1024,e=["Bytes","KB","MB","GB","TB"],n=Math.floor(Math.log(t)/Math.log(o));return`${(t/Math.pow(o,n)).toFixed(2)} ${e[n]}`}function i(t){const o=t.slice(0,3),e=t.slice(-4);return`${o}****${e}`}export{s as g,i as h};
