@@ -9,7 +9,7 @@ RUN apk add --update --no-cache ca-certificates
 RUN apk add --update --no-cache python3 make g++ py3-setuptools
 
 # 设置工作目录
-WORKDIR /src
+WORKDIR /code
 
 # 设置 npm 镜像源
 # ENV NPM_CONFIG_REGISTRY=https://registry.npmmirror.com
@@ -48,7 +48,7 @@ COPY ./189-vue-h5/cloud-vue-h5 /usr/share/nginx/html/cloud-vue-h5
 COPY ./189-vue-pc/cloud-vue-pc /usr/share/nginx/html/cloud-vue-pc
 
 # 复制从构建阶段生成的Node.js应用
-COPY --from=build-stage /src /src
+COPY --from=build-stage /code /code
 
 # 暴露端口 80
 EXPOSE 80 

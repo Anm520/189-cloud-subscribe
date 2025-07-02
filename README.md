@@ -18,6 +18,13 @@ docker pull anm520/189-cloud-subscribe:latest
 # 运行容器
 docker run -d --name 189-cloud-subscribe -p 8080:80  anm520/189-cloud-subscribe:latest
 ```
+## 快速部署,并挂载数据库到本地
+```bash
+# 拉取镜像
+docker pull anm520/189-cloud-subscribe:latest
+# 运行容器
+docker run -d --name 189-cloud-subscribe -p 8080:80  anm520/189-cloud-subscribe:latest -v /your/path/data:/code/data
+```
 ### 使用Docker Compose
 创建 `docker-compose.yml` 文件：
 ```yaml:189-cloud-subscribe/README.md
