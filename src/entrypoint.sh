@@ -7,4 +7,4 @@ if [ -z "$(ls -A /code/src/)" ]; then
 fi
 
 # 启动服务
-nginx -g 'daemon off;' & node src/index.js
+nginx -g 'daemon off;' & node ./index.js
