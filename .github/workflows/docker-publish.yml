@@ -2,22 +2,22 @@ name: 构建并发布 Docker 镜像
 
 on:
   workflow_dispatch: # 添加手动触发事件
-#   push:
-#     branches:
-#       - main # 监听 main 分支的推送事件
-#     paths-ignore:
-#       - 'README.md' # 忽略 README.md 的更改
-#       - '.github/workflows/docker-publish.yml' # 忽略此工作流文件的更改
-#       - 'readme.txt'
-#       - '.gitignore'
-#   pull_request:
-#     branches:
-#       - main
-#     paths-ignore:
-#       - 'README.md' # 忽略 README.md 的更改
-#       - '.github/workflows/docker-publish.yml' # 忽略此工作流文件的更改
-#       - 'readme.txt'
-#       - '.gitignore'
+  push:
+    branches:
+      - main # 监听 main 分支的推送事件
+    paths-ignore:
+      - 'README.md' # 忽略 README.md 的更改
+      - '.github/workflows/docker-publish.yml' # 忽略此工作流文件的更改
+      - 'readme.txt'
+      - '.gitignore'
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - 'README.md' # 忽略 README.md 的更改
+      - '.github/workflows/docker-publish.yml' # 忽略此工作流文件的更改
+      - 'readme.txt'
+      - '.gitignore'
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -45,14 +45,14 @@ jobs:
           node-version: '18'  # 根据你的项目需求调整版本
       # ✅ Step 4: 构建第一个 Vue 子模块（假设路径是 cloud-vue-pc）
       - name: Build Vue PC project
-        working-directory: ./cloud-vue-pc
+        working-directory: ./189-vue-pc
         run: |
           npm install
           npm run build
 
       # ✅ Step 5: 构建第二个 Vue 子模块（假设路径是 cloud-vue-mobile）
       - name: Build Vue Mobile project
-        working-directory: ./cloud-vue-h5
+        working-directory: ./189-vue-h5
         run: |
           npm install
           npm run build
