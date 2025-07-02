@@ -44,8 +44,8 @@ COPY ./nginx.conf /etc/nginx/nginx.conf
 RUN nginx -t
 
 # 复制新的 index.html 文件到镜像中
-COPY ./cloud-vue-h5 /usr/share/nginx/html/cloud-vue-h5
-COPY ./cloud-vue-pc /usr/share/nginx/html/cloud-vue-pc
+COPY ./189-vue-h5/cloud-vue-h5 /usr/share/nginx/html/cloud-vue-h5
+COPY ./189-vue-pc/cloud-vue-pc /usr/share/nginx/html/cloud-vue-pc
 
 # 复制从构建阶段生成的Node.js应用
 COPY --from=build-stage /usr/src/app /usr/src/app

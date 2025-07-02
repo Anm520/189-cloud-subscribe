@@ -24,8 +24,38 @@ jobs:
 
     steps:
       # 检出代码
-      - name: Checkout code
+      # ✅ Step 1: 检出主仓库代码 + 子模块（递归）
+      - name: Checkout code with submodules
         uses: actions/checkout@v3
+        with:
+          submodules: recursive # 自动拉取所有子模块
+          fetch-depth: 0        # 获取全部历史，确保 submodule 更新到最新 commit
+
+      # ✅ Step 2: 更新子模块为最新分支提交（可选）
+      # 如果你希望子模块也使用最新分支（如 main）而非固定 commit，可以加上以下步骤：
+      - name: Update submodules to latest branch
+        run: |
+          git submodule foreach --recursive git fetch origin
+          git submodule foreach --recursive git checkout main  
+          git submodule foreach --recursive git pull origin main
+      # ✅ Step 3: 安装 Node.js 环境
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # 根据你的项目需求调整版本
+      # ✅ Step 4: 构建第一个 Vue 子模块（假设路径是 cloud-vue-pc）
+      - name: Build Vue PC project
+        working-directory: ./cloud-vue-pc
+        run: |
+          npm install
+          npm run build
+
+      # ✅ Step 5: 构建第二个 Vue 子模块（假设路径是 cloud-vue-mobile）
+      - name: Build Vue Mobile project
+        working-directory: ./cloud-vue-h5
+        run: |
+          npm install
+          npm run build
 
       # 设置 QEMU 以支持多架构构建
       - name: Set up QEMU
@@ -52,4 +82,4 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/189-cloud-subscribe:latest
-            ${{ secrets.DOCKER_HUB_USERNAME }}/189-cloud-subscribe:1.0.1
+            ${{ secrets.DOCKER_HUB_USERNAME }}/189-cloud-subscribe:1.0.2
