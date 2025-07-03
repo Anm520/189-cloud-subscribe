@@ -82,4 +82,4 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/189-cloud-subscribe:latest
-            ${{ secrets.DOCKER_HUB_USERNAME }}/189-cloud-subscribe:1.0.2
+            ${{ secrets.DOCKER_HUB_USERNAME }}/189-cloud-subscribe:1.1.0
