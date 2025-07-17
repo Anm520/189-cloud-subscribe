@@ -20,6 +20,9 @@ COPY package*.json ./
 # 复制应用源代码
 COPY ./src ./
 
+# 创建数据目录
+RUN mkdir -p /code/data
+
 RUN npm install
 
 # 第二阶段：生产阶段
