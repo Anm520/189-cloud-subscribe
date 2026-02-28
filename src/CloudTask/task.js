@@ -48,12 +48,13 @@ async function executeTaskFn(taskRow, result) {
     shareMode: taskRow.share_mode,
     orderBy: "filename",
     descending: false,
+    accessCode: taskRow.access_code,
   };
   // console.log(' taskRow>>>>>:', taskRow);
   const accountInfo = await SQLAPI.getOneData(
     "cloud_users",
     "account",
-    taskRow.account
+    taskRow.account,
   );
   const cookie = (accountInfo && accountInfo.cookies) || "";
   // console.log('accountInfo >>>>>:', accountInfo);
@@ -61,7 +62,7 @@ async function executeTaskFn(taskRow, result) {
     return handleError(
       { message: "executeTaskFn 任务执行，获取cookie失败" },
       result,
-      "executeTaskFn 任务执行，获取cookie失败"
+      "executeTaskFn 任务执行，获取cookie失败",
     );
   // return console.log('executeTaskFn结束 >>>>>:', accountInfo);
   // 获取分享文件列表
@@ -72,7 +73,7 @@ async function executeTaskFn(taskRow, result) {
     handleError(
       shareFilesInfo,
       result,
-      "executeTaskFn 任务执行，获取分享目录系信息失败"
+      "executeTaskFn 任务执行，获取分享目录系信息失败",
     );
     if (errorCode[shareFilesInfo.res_code]) {
       const errorMsg = `【${taskRow.task_name}】:${
@@ -122,7 +123,7 @@ async function executeTaskFn(taskRow, result) {
     handleError(
       ListFilesInfo,
       result,
-      "executeTaskFn 任务执行，获取自己云盘保存目录的文件列表失败"
+      "executeTaskFn 任务执行，获取自己云盘保存目录的文件列表失败",
     );
     return;
   }
@@ -135,14 +136,14 @@ async function executeTaskFn(taskRow, result) {
   const { added: addedFile } = findDifference(
     OwnFilesInfo.fileList,
     shareFilesInfo.fileListAO.fileList,
-    "md5"
+    "md5",
   );
   let added = [];
   if (taskRow.save_type == 1) {
     const { added: addedFolder } = findDifference(
       OwnFilesInfo.folderList,
       shareFilesInfo.fileListAO.folderList,
-      "name"
+      "name",
     );
     added = [...addedFile, ...addedFolder];
   } else {
@@ -183,14 +184,14 @@ async function executeTaskFn(taskRow, result) {
           task_name: taskRow.task_name,
         },
         0,
-        { task_name: taskRow.task_name, added, account: taskRow.account }
+        { task_name: taskRow.task_name, added, account: taskRow.account },
       );
     })
     .catch((err) => {
       handleError(
         err,
         result,
-        "任务执行失败：executeTaskFn ==> CloudAPI.createBatchTask :"
+        "任务执行失败：executeTaskFn ==> CloudAPI.createBatchTask :",
       );
     });
 }
@@ -218,7 +219,7 @@ export function executeTaskByID(id, result) {
       handleError(
         err,
         result,
-        "任务执行失败：executeTaskByID ==> getTaskInfo :"
+        "任务执行失败：executeTaskByID ==> getTaskInfo :",
       );
     });
 }
@@ -262,7 +263,7 @@ async function checkCookieFn(accountRow, errMsgList) {
     console.log(
       "cookie过期，正在尝试重新登录 >>>>>:",
       accountRow.account,
-      dayjs().format("YYYY-MM-DD HH:mm:ss")
+      dayjs().format("YYYY-MM-DD HH:mm:ss"),
     );
     return SQLAPI.LoginByAccountFn(accountRow.account).then((el) => {
       errMsgList.push(el);
@@ -293,16 +294,19 @@ function createTimedTask(result) {
       const row = rows[0];
       if (row && row.is_execute == 1) {
         timer && clearInterval(timer);
-        timer = setInterval(() => {
-          console.log(
-            "定时任务执行开始...",
-            dayjs().format("YYYY-MM-DD HH:mm:ss")
-          );
-          batchCheckCookieFn();
-        }, 1000 * 60 * row.time_interval);
+        timer = setInterval(
+          () => {
+            console.log(
+              "定时任务执行开始...",
+              dayjs().format("YYYY-MM-DD HH:mm:ss"),
+            );
+            batchCheckCookieFn();
+          },
+          1000 * 60 * row.time_interval,
+        );
         console.log(
           "定时任务执行开始......",
-          dayjs().format("YYYY-MM-DD HH:mm:ss")
+          dayjs().format("YYYY-MM-DD HH:mm:ss"),
         );
         result &&
           result
